@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+  font-family: 'Satoshi-Bold';
+  src: url('./assets/fonts/Satoshi-Bold.woff2') format('woff2'),
+       url('./assets/fonts/Satoshi-Bold.woff') format('woff'),
+       url('./assets/fonts/Satoshi-Bold.ttf') format('truetype');
+       font-weight: 700;
+       font-display: swap;
+       font-style: normal;
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+  outline: 0;
+  border: 0;
+  /* box-sizing: border-box; */
+  /* overflow-x: hidden; */
+}
+
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+ .no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+   scrollbar-width: none; /* Firefox */
+ } 
+
+body {
+  margin: 0;
+  /* background: linear-gradient(to right, #2b971c, #a5d18d, #7fb562, #98be83, #e4e4d9); */
+  background-image: url('./assets/background.png');
+  font-family: 'Satoshi-Bold', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.drop-container {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px dashed #555;
+  color: #444;
+  cursor: pointer;
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+
+.drop-container:hover {
+  background: #eee;
+  border-color: #111;
+}
+
+.drop-container:hover .drop-title {
+  color: #222;
+}
+
+.drop-title {
+  color: #444;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  transition: color .2s ease-in-out;
+}

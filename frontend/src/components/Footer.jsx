@@ -65,7 +65,7 @@ const Footer = () => {
             <li className="footer-nav-item">
               <h2 className="nav-title text-xl font-bold">Find Us On</h2>
             </li>
-          <li className="footer-nav-item flex items-center my-2">
+          <li className="footer-nav-item flex items-center justify-center my-2">
           <div className="footer-nav-item flex items-center my-2 mr-4">
            <GrGoogle />
            </div>
@@ -79,8 +79,8 @@ const Footer = () => {
            <li className="footer-nav-item">
               <h2 className="nav-title text-xl font-xl">Get Connected</h2>
             </li>
-            <li className="footer-nav-item flex items-center my-2">
-          <div className="footer-nav-item flex items-center my-2 mr-4">
+            <li className="footer-nav-item flex items-center justify-center my-2">
+          <div className="footer-nav-item flex items-center  my-2 mr-4">
           <FaInstagram />
            </div>
            <div className="footer-nav-item flex items-center my-2 mr-4">

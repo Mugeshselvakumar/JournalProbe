@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'; 
+import { useParams, useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 
 const JournalView = () => {
@@ -11,6 +10,7 @@ const JournalView = () => {
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   const [comment, setComment] = useState('');
   const [author, setAuthor] = useState('');
+  const navigate = useNavigate();
 
   function getCookieValue(name) {
     const cookies = document.cookie.split(';');
@@ -22,22 +22,45 @@ const JournalView = () => {
     }
     return null;
   }
-  const navigate = useNavigate();
 
-  const backClick = ()=>{
+  // Helper to convert an array of ASCII codes to a string.
+  const arrayToString = (arr) => {
+    let result = '';
+    arr.forEach((code) => {
+      result += String.fromCharCode(code);
+    });
+    return result;
+  };
+
+  // Helper to get a proper data URL for the image.
+  const getImageDataUrl = (image) => {
+    // Check if image.data.data is an array; if so, convert it directly to a string.
+    if (image && image.data && image.data.data) {
+      return arrayToString(image.data.data);
+    }
+    // Otherwise, return the image as-is (if already a URL).
+    return image;
+  };
+
+  const backClick = () => {
     navigate('/journals');
-  }
+  };
 
   useEffect(() => {
     const fetchJournal = async () => {
       const Token = getCookieValue('journal_token');
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}journal/getJournalbyId`, { id: journalid }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Token}`
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}journal/getJournalbyId`, 
+        { id: journalid }, 
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Token}`
+          }
         }
-      });
+      );
       setBlogs(response.data.message);
+      console.log(response.data);
     };
 
     const fetchComments = async () => {
@@ -70,16 +93,20 @@ const JournalView = () => {
   const handleCommentSubmit = async () => {
     const token = getCookieValue('journal_token');
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}comments/addComment`, {
-        journalId: journalid,
-        comment: comment,
-        author: author,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}comments/addComment`, 
+        {
+          journalId: journalid,
+          comment: comment,
+          author: author,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         }
-      });
+      );
       if (response.status === 200) {
         alert('Comment added successfully');
         setComment('');
@@ -97,12 +124,16 @@ const JournalView = () => {
       <br />
       <div className='w-[100%] flex justify-center items-center'>
         <div className='text-[#333] sm:w-[90%] flex flex-col justify-center items-center mb-5 py-10 shadow-xl rounded-md bg-white'>
-          <div className=' text-5xl sm:text-3xl sm:w-[90%] mt-10 sm:px-5'>
+          <div className='text-5xl sm:text-3xl sm:w-[90%] mt-10 sm:px-5'>
             {blog.blogTitle}
           </div>
           <div className='flex flex-col sm:flex-row sm:w-[90%] sm:pt-10 sm:pb-10 justify-center items-center gap-5'>
             <div className='w-[90%] mt-5 sm:w-[40%] sm:mt-0'>
-              <img src={blog.image} className='rounded-md' alt='Journal Cover' />
+              <img 
+                src={getImageDataUrl(blog.image)} 
+                className='rounded-md' 
+                alt='Journal Cover' 
+              />
             </div>
             <div className='flex flex-col w-[90%] gap-5 sm:w-[60%] py-5'>
               <div className='text-l sm:text-3xl'>{blog.description}</div>
@@ -148,13 +179,13 @@ const JournalView = () => {
                 >
                   Submit Comment
                 </button>
-               
               </div>
             )}
-           <div className='flex items-center justify-center w-full mt-[2rem]'>
-            
-              <button onClick={()=>backClick()} className='p-[0.8rem] bg-green-700 text-xl rounded-md text-white'>Back to journals</button>
-          </div>
+            <div className='flex items-center justify-center w-full mt-[2rem]'>
+              <button onClick={backClick} className='p-[0.8rem] bg-green-700 text-xl rounded-md text-white'>
+                Back to journals
+              </button>
+            </div>
           </div>
           <div className='w-[90%] text-left mt-5'>
             {comments.map((comment, index) => (

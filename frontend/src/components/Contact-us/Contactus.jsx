@@ -28,7 +28,7 @@ const Contactus = () => {
       await emailjs.send('service_mi71sks', 'template_24cv2x6', templateParams, '4rcP9ONkSzPtyasdG');
 
       // Store data in the database
-      await axios.post(`${VITE_BASE_URL}api/contactus`, formData);
+      await axios.post(`${import.meta.env.VITE_BASE_URL}api/contactus`, formData);
 
       // Clear form fields after successful submission
       setFormData({ fullName: '', email: '', message: '' });

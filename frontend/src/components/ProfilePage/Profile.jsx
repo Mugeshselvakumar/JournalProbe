@@ -7,7 +7,6 @@ import { TbEdit } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
 import { ToastContainer, toast } from 'react-toastify';
 
-
 const Profile = () => {
     const navigate = useNavigate();
     const [userName, setUserName] = useState('');
@@ -25,7 +24,6 @@ const Profile = () => {
         return null;
     }
      
-
     const token = getCookieValue('journal_token');
 
     const fetchData = async () => {
@@ -76,12 +74,12 @@ const Profile = () => {
                 userName,
                 title
             },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
             toast.success('Deleted Successfully');
             setFlag(!flag);
         } catch (err) {
@@ -90,38 +88,63 @@ const Profile = () => {
         }
     };
 
+    // Helper to convert an array of numbers (raw binary) to a Base64 data URL.
+    const getImageDataUrl = (image) => {
+        if (image && image.data && image.data.data) {
+            // Create a Uint8Array from the array of numbers.
+            const uint8Arr = new Uint8Array(image.data.data);
+            let binary = '';
+            for (let i = 0; i < uint8Arr.byteLength; i++) {
+                binary += String.fromCharCode(uint8Arr[i]);
+            }
+            const base64String = window.btoa(binary);
+            return `data:${image.contentType};base64,${base64String}`;
+        }
+        // Otherwise, assume image is already a valid URL.
+        return image;
+    };
+
     return (
         <div className='w-full'>
             <div className='flex flex-col gap-x-5 my-5 rounded-xl'>
                 <div className='w-[95%] rounded-xl'>
                     <div className='h-[20rem] flex flex-row shadow-xl items-center justify-center'>
                         <div className='hidden lg:block rounded-full'>
-                            <img src={'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}
+                            <img 
+                                src={'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}
                                 className='h-[15rem] p-4 rounded-[100%]'
+                                alt="Profile" 
                             />
                         </div>
                         <div className='flex flex-col ml-5'>
                             <p className='text-7xl'>{userName}</p>
-                            <div className='py-2'><p className='0'>@{userName}</p></div>
-                            <button className='bg-green-700 py-2 rounded-lg text-white' onClick={() => {
-                                document.cookie = "journal_token='';max-age=0";
-                                navigate('/login');
-                            }}>Logout</button>
+                            <div className='py-2'><p>@{userName}</p></div>
+                            <button 
+                                className='bg-green-700 py-2 rounded-lg text-white'
+                                onClick={() => {
+                                    document.cookie = "journal_token='';max-age=0";
+                                    navigate('/login');
+                                }}
+                            >
+                                Logout
+                            </button>
                         </div>
                     </div>
                     <div className='mt-10'>
                         <hr className='h-[0.2rem] mb-[2rem] bg-white' />
-                        
                         <h2 className="text-5xl font-bold text-green-700 mb-4">Your Articles</h2>
-                        <br></br>
-                        <br></br>
+                        <br /><br />
                         <div className='mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                             {data.map((journal, index) => (
                                 <div
                                     key={index}
                                     className='relative bg-white shadow-lg rounded-lg overflow-hidden flex flex-col group transition-transform transform hover:scale-105 hover:border-gray-300 border border-transparent'
                                 >
-                                    <img src={journal.image} alt='journal' className='h-[200px] w-full object-cover transition-transform group-hover:scale-110' />
+                                    <img 
+                                        src={getImageDataUrl(journal.image)} 
+                                        alt='journal' 
+                                        className='h-[200px] w-full object-cover transition-transform group-hover:scale-110' 
+                                    />
                                     <div className='p-6 flex-1'>
                                         <Link to={`/${journal._id}`}>
                                             <h2 className='text-2xl font-bold mb-2'>{journal.title}</h2>
@@ -132,17 +155,20 @@ const Profile = () => {
                                             <p className='text-gray-700 mb-4'>{journal.description}</p>
                                         </Link>
                                     </div>
-                                    {/* <Link to={`/${journal._id}`}>
-                                    <div className='absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center'>
-                                        <p className='text-white text-lg font-semibold'>View Journal</p>
-                                    </div>
-                                    </Link> */}
-                                    
                                     <div className='flex-none bg-gray-100 p-4 flex justify-between items-center'>
-                                        <button className='p-2 text-xl bg-green-400 rounded-md hover:bg-green-500 transition-colors' onClick={() => { handleEdit(journal._id) }}><TbEdit /></button>
-                                        <button className='p-2 text-xl bg-red-500 rounded-md hover:bg-red-600 transition-colors text-white' onClick={() => { handleDelete(journal.userName, journal.title) }}><MdDeleteOutline /></button>
+                                        <button 
+                                            className='p-2 text-xl bg-green-400 rounded-md hover:bg-green-500 transition-colors'
+                                            onClick={() => { handleEdit(journal._id) }}
+                                        >
+                                            <TbEdit />
+                                        </button>
+                                        <button 
+                                            className='p-2 text-xl bg-red-500 rounded-md hover:bg-red-600 transition-colors text-white'
+                                            onClick={() => { handleDelete(journal.userName, journal.title) }}
+                                        >
+                                            <MdDeleteOutline />
+                                        </button>
                                     </div>
-                                    
                                 </div>
                             ))}
                         </div>

@@ -3,27 +3,50 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import ReactStars from 'react-rating-stars-component';
 import { useNavigate } from 'react-router';
+
+// Helper function: converts an array of numbers (raw binary data) to a Base64 data URL.
+const getImageDataUrl = (image) => {
+  if (image && image.data && image.data.data) {
+    // Convert the nested array to a Uint8Array.
+    const uint8Arr = new Uint8Array(image.data.data);
+    let binary = '';
+    for (let i = 0; i < uint8Arr.byteLength; i++) {
+      binary += String.fromCharCode(uint8Arr[i]);
+    }
+    const base64String = window.btoa(binary);
+    return `data:${image.contentType};base64,${base64String}`;
+  }
+  // Otherwise, assume image is already a valid URL.
+  return image;
+};
+
 const JournalCard = ({ id, title, ima, rating, handleRating }) => {
+  // Convert the image if needed before rendering.
+  const imageUrl = getImageDataUrl(ima);
 
   return (
     <div className='py-10'>
       <div className="relative flex w-80 flex-col rounded-xl bg-white bg-clip-border text-black shadow-md">
-        <img src={ima} className="relative mx-4 -mt-6 h-40 overflow-hidden rounded-xl bg-blue-gray-500 bg-clip-border text-white shadow-lg shadow-blue-gray-500/40 bg-green-700" />
+        <img
+          src={imageUrl}
+          className="relative mx-4 -mt-6 h-40 overflow-hidden rounded-xl bg-blue-gray-500 bg-clip-border text-white shadow-lg shadow-blue-gray-500/40 bg-green-700"
+          alt="Journal"
+        />
         <div className="p-6">
           <h5 className="mb-2 block text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased h-[5rem] overflow-hidden">
             {title}
           </h5>
         </div>
         <div className="p-6 pt-0 flex justify-center items-center gap-4">
-        <Link 
-            to={`/${id}`} >
-          <button 
-            data-ripple-light="true" type="button"
-            className="select-none rounded-lg bg-green-700 py-3 px-6 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all  disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          <Link to={`/${id}`}>
+            <button
+              data-ripple-light="true"
+              type="button"
+              className="select-none rounded-lg bg-green-700 py-3 px-6 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             >
-            Read More
-          </button>
-        </Link>
+              Read More
+            </button>
+          </Link>
           <ReactStars
             count={5}
             onChange={(newRating) => handleRating(id, newRating)}
@@ -61,7 +84,9 @@ const PopJourn = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      const filteredJournals = response.data.journals.filter(journal => journal.country.toLowerCase() === country.toLowerCase());
+      const filteredJournals = response.data.journals.filter(journal => 
+        journal.country.toLowerCase() === country.toLowerCase()
+      );
       setData(filteredJournals);
     };
     fetchData();
@@ -70,7 +95,7 @@ const PopJourn = () => {
   const handleRating = async (journalId, newRating) => {
     const token = getCookieValue('journal_token');
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}journal/rateJournal`, {
+      await axios.post(`${import.meta.env.VITE_BASE_URL}journal/rateJournal`, {
         id: journalId,
         rating: newRating
       }, {
@@ -86,19 +111,19 @@ const PopJourn = () => {
 
   return (
     <>
-    <br></br><br></br><br></br><br></br>
-    <div className="flex justify-center flex-wrap gap-10">
-      {data.map((journal) => (
-        <JournalCard
-          key={journal._id}
-          id={journal._id}
-          title={journal.title}
-          ima={journal.image}
-          rating={journal.rating}
-          handleRating={handleRating}
-        />
-      ))}
-    </div>
+      <br /><br /><br /><br />
+      <div className="flex justify-center flex-wrap gap-10">
+        {data.map((journal) => (
+          <JournalCard
+            key={journal._id}
+            id={journal._id}
+            title={journal.title}
+            ima={journal.image}
+            rating={journal.rating}
+            handleRating={handleRating}
+          />
+        ))}
+      </div>
     </>
   );
 };

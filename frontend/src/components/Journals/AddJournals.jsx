@@ -257,7 +257,7 @@ const AddJournals = () => {
                 value={image} onClick={() => document.querySelector('input[name="image"]').click()}
               >
                 <label className="absolute left-0 -top-8 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-green-700 peer-focus:text-sm">
-                  Upload Image
+                  Upload Image  
                 </label>
                 <span id="file-name" className="text-gray-500">Drop or Upload your image</span>
               </div>

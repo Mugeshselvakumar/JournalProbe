@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { FaThumbsUp } from 'react-icons/fa';
 import { FcLike } from "react-icons/fc";
 
 const Journals = () => {
@@ -18,6 +17,25 @@ const Journals = () => {
       }
     }
     return null;
+  };
+
+  // Helper to convert an array of numbers to a Base64-encoded string
+  const arrayToBase64 = (arr) => {
+    let binary = '';
+    arr.forEach((byte) => {
+      binary += String.fromCharCode(byte);
+    });
+    return window.btoa(binary);
+  };
+
+  // Convert the journal image from nested array to data URL if needed.
+  const getImageDataUrl = (image) => {
+    if (image && image.data && image.data.data) {
+      const base64String = arrayToBase64(image.data.data);
+      return `data:${image.contentType || 'image/jpeg'};base64,${base64String}`;
+    }
+    // Otherwise, if image is already a string, return it as is
+    return image;
   };
 
   const handleSearch = () => {
@@ -91,6 +109,7 @@ const Journals = () => {
         }
       });
       setData(response.data.journals);
+      console.log(response.data.journals);
     };
     fetchData();
   }, []);
@@ -98,15 +117,7 @@ const Journals = () => {
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
-  
-  // const [like, setLike] = useState(journal.likes);
-  // const [unlike, setUnlike] = useState(false);
-  
 
-  // const handlelikes = () => {
-  //   setLike(unlike ? like - 1 : like + 1);
-  // };
-  
   return (
     <>
       <br /><br /><br />
@@ -135,8 +146,12 @@ const Journals = () => {
               className='flex-1'
               onClick={() => handleView(journal._id)}
             >
-              <img src={journal.image} alt='journal' className='h-[200px] w-full object-cover transition-transform group-hover:scale-110' />
-              <br></br>
+              <img 
+                src={getImageDataUrl(journal.image)} 
+                alt='journal' 
+                className='h-[200px] w-full object-cover transition-transform group-hover:scale-110' 
+              />
+              <br />
               <div className='flex flex-col flex-1'>
                 <div className='text-2xl font-bold mb-2'>{journal.title}</div>
                 <div className='p-6 flex-1'>

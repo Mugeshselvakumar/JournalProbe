@@ -5,7 +5,10 @@ const journalSchema = new mongoose.Schema({
     description: {type: String, require: true, default: ""},
     country: {type:String,reqire:true,default:""},
     author: {type: String, require: true, default: ""},
-    image: {type: String, require: true, default: ""},
+    image: {
+        data: Buffer,
+        contentType: String
+      },
     journalContent: {type: String, require: true, default: ""},
     date: {type: Date, require: true, default: Date.now()},
     userName: {type: String, require: true},

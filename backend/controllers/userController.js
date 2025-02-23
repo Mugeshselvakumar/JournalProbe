@@ -87,4 +87,8 @@ const signup = async(req, res) =>{
     }
 }
 
-module.exports = {signup, login, getUser}
+const cron = (req, res) => {
+    return res.status(200).json({ message: "happy" });
+};
+
+module.exports = {signup, login, getUser,cron}

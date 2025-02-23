@@ -121,7 +121,7 @@ const JournalView = () => {
           </div>
           <div className='w-[90%] text-left mt-5'>
             <button
-              className='bg-green-400 text-white px-4 py-2 rounded-lg'
+              className='bg-green-700 text-white px-4 py-2 rounded-lg'
               onClick={handleCommentToggle}
             >
               Comment
@@ -144,7 +144,7 @@ const JournalView = () => {
                 />
                 <button
                   onClick={handleCommentSubmit}
-                  className='mt-2 px-4 py-2 bg-green-400 text-white rounded-lg'
+                  className='mt-2 px-4 py-2 bg-green-700 text-white rounded-lg'
                 >
                   Submit Comment
                 </button>
@@ -153,7 +153,7 @@ const JournalView = () => {
             )}
            <div className='flex items-center justify-center w-full mt-[2rem]'>
             
-              <button onClick={()=>backClick()} className='p-[0.8rem] bg-green-500 text-xl rounded-md text-white'>Back to journals</button>
+              <button onClick={()=>backClick()} className='p-[0.8rem] bg-green-700 text-xl rounded-md text-white'>Back to journals</button>
           </div>
           </div>
           <div className='w-[90%] text-left mt-5'>

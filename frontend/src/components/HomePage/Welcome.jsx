@@ -23,15 +23,15 @@ const Welcome = () => {
                   repeat={Infinity}
               /></p> 
             <p className='py-2'>Capture.Preserve.Share.</p>
-            <div className='py-10 flex flex-start'><button className='w-[12rem] h-[3.5rem] bg-green-700 rounded-full' onClick={toExplore}>
+            <div className='py-10 flex w-full items-center justify-center'>
+              <button className='w-[12rem] h-[3.5rem] bg-green-700 rounded-full' onClick={toExplore}>
                 <span className='text-2xl text-white'>Explore</span>
             </button>
             </div> 
        </div>
            
         </div>
-      <div>  
-      </div>
+      
       
     </section>
   )
